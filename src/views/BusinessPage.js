@@ -109,9 +109,9 @@ export default Relay.createContainer(
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          id
+#          id
           ${CreateBusinessMutation.getFragment('viewer')}
-          Business(id: $id) @include( if: $businessExists ) {
+          business(id: $id) @include( if: $businessExists ) {
             id
             name
             url

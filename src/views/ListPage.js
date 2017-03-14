@@ -4,6 +4,8 @@ import BusinessPreview from '../components/BusinessPreview'
 import AddNew from '../components/AddNew'
 import classes from './ListPage.css'
 
+const PER_PAGE = 10
+
 class ListPage extends React.Component {
   static propTypes = {
     viewer: React.PropTypes.object,
@@ -16,8 +18,8 @@ class ListPage extends React.Component {
         </div>
         <div className={classes.container}>
           {this.props.viewer.businessConnection.edges.map((edge) => edge.node).map((business) =>
-            <BusinessPreview key={business.id} business={business} />
-          )
+            <BusinessPreview key={business._id} business={business} />
+            )
           }
           <AddNew />
         </div>
@@ -26,23 +28,51 @@ class ListPage extends React.Component {
   }
 }
 
-export default Relay.createContainer(
-  ListPage,
-  {
-    fragments: {
-      viewer: () => Relay.QL`
+export default Relay.createContainer(ListPage, {
+  initialVariables: {
+    count: PER_PAGE,
+    filter: null,
+  },
+  fragments: {
+    viewer: () => Relay.QL`
         fragment on Viewer {
-          businessList (first: 100000) {
-            edges {
-              node {
-                ${BusinessPreview.getFragment('business')}
-                id
-              }
+            businessConnection(first: $count, filter: $filter) {
+                count
+                pageInfo {
+                    hasNextPage
+                }
+                edges {
+                    cursor
+                    node {
+                        _id
+                        ${BusinessPreview.getFragment('business')}
+                    
+                    }
+                }
             }
-          }
-          id
         }
       `,
-    },
   },
+},
 )
+//
+// export default Relay.createContainer(
+//   ListPage,
+//   {
+//     fragments: {
+//       viewer: () => Relay.QL`
+//         fragment on Viewer {
+//           businessList (first: 100000) {
+//             edges {
+//               node {
+//                 ${BusinessPreview.getFragment('business')}
+//                 id
+//               }
+//             }
+//           }
+//           id
+//         }
+//       `,
+//     },
+//   },
+// )
