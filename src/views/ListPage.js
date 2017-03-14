@@ -38,8 +38,14 @@ export default Relay.createContainer(ListPage, {
     viewer: () => Relay.QL`
         fragment on Viewer {
             businessConnection(first: $count, filter: $filter) {
+                count
+                pageInfo {
+                    hasNextPage
+                }
                 edges {
+                    cursor
                     node {
+                        _id
                         ${BusinessPreview.getFragment('business')}
                         id
                     }

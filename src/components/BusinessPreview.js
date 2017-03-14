@@ -30,11 +30,13 @@ export default Relay.createContainer(
   {
     fragments: {
       business: () => Relay.QL`
-        fragment getOne on Business {
-            id
-            business_id
-            name
-            url
+        fragment businessById on BusinessEdge {
+            node{
+                id
+                business_id
+                name
+                url
+            }
         }
       `,
     },
