@@ -11,14 +11,15 @@ class ListPage extends React.Component {
     viewer: React.PropTypes.object,
   }
   render () {
+    console.log(this.props)
     return (
       <div className={classes.root}>
         <div className={classes.title}>
           {`There are ${this.props.viewer.businessConnection.edges.length} Businesses in your directory`}
         </div>
         <div className={classes.container}>
-          {this.props.viewer.businessConnection.edges.map((edge) => edge.node).map((business) =>
-            <BusinessPreview key={business._id} business={business} />
+          {this.props.viewer.businessConnection.edges.map(edge =>
+            <BusinessPreview key={edge.node.id} business={edge.node} />
             )
           }
           <AddNew />
@@ -37,16 +38,10 @@ export default Relay.createContainer(ListPage, {
     viewer: () => Relay.QL`
         fragment on Viewer {
             businessConnection(first: $count, filter: $filter) {
-                count
-                pageInfo {
-                    hasNextPage
-                }
                 edges {
-                    cursor
                     node {
-                        _id
                         ${BusinessPreview.getFragment('business')}
-                    
+                        id
                     }
                 }
             }

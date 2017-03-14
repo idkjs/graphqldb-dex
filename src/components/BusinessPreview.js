@@ -11,6 +11,7 @@ class BusinessPreview extends React.Component {
   }
 
   render () {
+    console.log(this.props)
     return (
       <Link className={classes.link} to={`/view/${this.props.business.id}`}>
         <div className={classes.previewPage}>
@@ -29,10 +30,11 @@ export default Relay.createContainer(
   {
     fragments: {
       business: () => Relay.QL`
-        fragment on Business {
-          id
-          name
-          url
+        fragment getOne on Business {
+            id
+            business_id
+            name
+            url
         }
       `,
     },
